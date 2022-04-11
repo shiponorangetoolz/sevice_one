@@ -2,44 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Repositories\BillingRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use GuzzleHttp\Client;
 
 class UserController extends Controller
 {
+
+    private $userRepository;
+    private $billingRepository;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserRepositoryInterface $userRepository,BillingRepository $billingRepository)
     {
-        //
+        $this->userRepository = $userRepository;
+        $this->billingRepository = $billingRepository;
     }
-
-    public function myfunction($v1, $v2)
-    {
-        if ($v1 === $v2) {
-            return "same";
-        }
-        return "different";
-    }
-
 
     public function index()
     {
-        $users = User::select('uid', 'name', 'phone')->paginate(1);
+        $users = $this->userRepository->getAll();
         $uids = $users->pluck('uid')->toArray();
-
-        $httpClient = new Client();
-        $request = $httpClient->get('http://two.test/billing', [
-            'query' => $uids
-        ]);
-
-        $bills = json_decode($request->getBody()->getContents());
+        $bills = $this->billingRepository->getBill($uids);
+//        dd($bills);
+//        $httpClient = new Client();
+//        $request = $httpClient->get('http://two.test/billing', [
+//            'query' => $uids
+//        ]);
+//
+//        $bills = json_decode($request->getBody()->getContents());
 
         foreach ($users as $user) {
-            $bill = collect($bills)->where('user_id',$user->uid)->first();
+            $bill = collect($bills)->where('user_id', $user->uid)->first();
             $user->package_name = $bill->name;
             $user->amount = $bill->amount;
         }
