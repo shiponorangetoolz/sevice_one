@@ -15,10 +15,12 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Mehedi Hasan',
-            'email' => 'shipon@gmail.com',
-            'password' => Hash::make('password')
-        ]);
+        for($i = 0; $i<3; $i++) {
+            $user = User::create([
+                'name' => 'Mehedi Hasan'.$i,
+                'phone' => '01734000000',
+                'password' => Hash::make('password')
+            ]);
+        }
     }
 }

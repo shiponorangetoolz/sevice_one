@@ -20,6 +20,7 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('redis',['uses' => 'RedisController@redis']);
+$router->get('users',['uses' => 'UserController@index']);
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('login', ['uses' => 'AuthController@login']);
