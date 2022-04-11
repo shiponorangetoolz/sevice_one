@@ -7,11 +7,11 @@ use GuzzleHttp\Client;
 
 class BillingRepository implements BillingRepositoryInterface
 {
-    public function getBill(array $uid)
+    public function getBill(array $uids)
     {
         $httpClient = new Client();
         $request = $httpClient->get('http://two.test/billing', [
-            'query' => $uid
+            'query' => $uids
         ]);
 
         return $bills = json_decode($request->getBody()->getContents());

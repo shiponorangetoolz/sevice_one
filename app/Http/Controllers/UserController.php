@@ -27,14 +27,8 @@ class UserController extends Controller
     {
         $users = $this->userRepository->getAll();
         $uids = $users->pluck('uid')->toArray();
+
         $bills = $this->billingRepository->getBill($uids);
-//        dd($bills);
-//        $httpClient = new Client();
-//        $request = $httpClient->get('http://two.test/billing', [
-//            'query' => $uids
-//        ]);
-//
-//        $bills = json_decode($request->getBody()->getContents());
 
         foreach ($users as $user) {
             $bill = collect($bills)->where('user_id', $user->uid)->first();
